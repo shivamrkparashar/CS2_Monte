@@ -1,0 +1,6 @@
+#!/bin/bash
+
+
+export SourceDir=/home/shivam/Desktop/gauge_cell/CS2_Monte/src
+
+time $SourceDir/cs2_monte input_10 | tee std.out

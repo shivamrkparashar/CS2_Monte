@@ -1,0 +1,7 @@
+#!/bin/bash
+
+
+#export SourceDir=/home/shivam/Desktop/gauge_cell/CS2_Monte/src/build
+export SourceDir=/home/shivam/Desktop/gauge_cell/CS2_Monte/src/cmake-build-debug
+
+time $SourceDir/cs2_monte input_-14 | tee std.out

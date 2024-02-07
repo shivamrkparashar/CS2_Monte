@@ -1,0 +1,15 @@
+FileInputPtr Filename : input_-14 
+Running GCMC simulation 
+AdsorbateFileName: N2.def
+Molecular Mass = 28.000000 AU 
+Running GCMC in a spherical pore 
+  VolumeOfSphericalPore (in A3)    : 1583.082329
+Temp(K): 50.750000 
+Ideal Gas set pressure (Pa) : 0.004877 
+EwaldSelfInteractionEnergy = 0.000000 
+Number of production cycles  = 5000 
+i = 1 
+Number of production cycles  = 5000 
+i = 2 
+             Chempot               P(kPa)                  <N>       Loading(g/cm3)    Loading(mumol/m2)      Loading(mol/m3)            Time(min) 
+             -14.000                0.000                0.002                0.000                0.000                1.888                0.000

@@ -1,0 +1,4 @@
+NumberOfAdsorbateAtom       1
+BondDistance         0
+#Number  #Element  #Epsilon(Kelvin)  #Sigma(Angstrom)  #Mass     #Charge    #AdsorbateAtomicDistance
+0        Ar         119.6             3.4              39.948       0.0     0   

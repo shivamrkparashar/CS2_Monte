@@ -1,0 +1,22 @@
+FileInputPtr Filename : input_10 
+Running Ideal Gas Gauge Cell 
+AdsorbateFileName: Ar.def
+COULOMB_CONVERSION_FACTOR = 410.930513 
+Molecular Mass = 39.948000 AU 
+Running GCMC in a Slit pore
+  VolumeOfSlitPore (in A3)    : 35991.778068
+Temp(K): 87.308000 
+Ideal Gas set pressure (Pa) : 46661961014.610184 
+EwaldSelfInteractionEnergy = 0.000000 
+Number of production cycles  = 10000 
+i = 1 
+Number of production cycles  = 10000 
+i = 2 
+       MaxNparticles                Npore               Ngauge              Chempot            Time(min) 
+                  10                    3                    7              -16.322                0.017
+                  10                    4                    6              -16.532                0.017
+                  10                    5                    5              -16.368                0.017
+                  10                    6                    4              -16.277                0.017
+                  10                    7                    3              -16.148                0.017
+                  10                    8                    2              -16.046                0.017
+                  10                    9                    1              -15.971                0.017

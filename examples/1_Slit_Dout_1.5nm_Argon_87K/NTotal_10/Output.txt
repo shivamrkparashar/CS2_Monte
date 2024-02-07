@@ -1,0 +1,140 @@
+****************  IGGC   ***************
+===================================================================
+ 
+Input file data 
+ ===================================================================
+ 
+  Simulation Method                          : IGGC
+  Type of Simulation                         : 2
+  Number Of Equilibration Cycles             : 5000
+  Number Of Production Cycles                : 10000
+  Sample Frequency                           : 1
+  Probability To Attempt Displacement Move    : 0.500000
+  Probability To Attempt Rotation Move       : 0.000000
+  Probability To Attempt Exchange Move       : 0.500000
+  Maximum Displacement                       : 0.090000
+  Chemical Potential (reduced units)         : 0.000000
+  Temperature (reduced units)                : 0.730000
+  Box Length (in Sigma)                      : 14.410000
+  Gauge Cell Box Length (in Sigma)           : 150.000000
+  Total Number of Particles (Gauge + Pore)   : 10
+
+===================================================================
+  
+ Fluid-Fluid Parameters
+  Number of Adsorbate Atoms: 1
+  Symbol: Ar
+    Sigma (in Angstrom)                      : 3.400000
+    Epsilon (in Kelvin)                      : 119.600000
+    Mass (in g/mol)                          : 39.948000
+    Charge (electronic)                      : 0.000000
+    VdWCutOff (in Sigma units)                  : 5.000000
+    ChargeCutOff (in Sigma units)               : 5.000000
+
+===================================================================
+  Solid-Solid Parameters
+    Sigma ss (in Angstrom)                      : 3.405000
+    Epsilon ss (in Kelvin)                      : 28.047000
+    Surface density (Ang^3)                     : 0.114000
+    Delta (Ang)                                 : 3.354000
+    Outer Diameter/Width  (reduced units)       : 4.410000
+
+
+ ===================================================================
+ 
+Ewald Summation Parameters     
+Relative precession           :0.000001
+Alpha (reduced units)         :0.625593
+kmax                          :10
+
+
+ ===================================================================
+ 
+
+Number of Molecules         : 0 
+Fourier Fluid-Fluid Energy  : 0.000000 
+Total Fluid-Fluid Energy    : 0.000000 
+Total Solid-Fluid Energy    : 0.000000 
+ Total Energy Initial Configuration: 0.000000
+ Total Virial Initial Configuration: 0.000000
+ Total Initial Number of Particles 0
+
+Start Equilibration
+Number Of Attempts To Displace a Particle  : 125066
+Success: 102413 (81.887164)
+Number Of Exchange Attempts  : 124933 
+Addition Success : 6530 (5.226802) 
+Deletion Success : 6522 (5.220398) 
+
+Number of Molecules         : 8 
+Fourier Fluid-Fluid Energy  : 0.000000 
+Total Fluid-Fluid Energy    : -0.160365 
+Total Solid-Fluid Energy    : -73.496206 
+
+Total Energy End Of Simulation          : -73.656572
+    Running ff VdW Energy               : -0.160365
+    Running ff Ewald Short-rangeEnergy  : 0.000000
+    Running ff Fourier                  : 0.000000
+    Running sf VdW Energy               : -73.496206
+    Running Energy Total                 : -73.656572
+    Difference                           : 0.000000
+
+Start Production
+---------->> Done 2000 out of 10000
+Block Average                   :
+    NumberOfParticles = 8.643000 
+ Frac. Acc.: 0.817117
+ Attempts: 50114
+ Success: 40949
+
+---------->> Done 4000 out of 10000
+Block Average                   :
+    NumberOfParticles = 8.531500 
+ Frac. Acc.: 0.773074
+ Attempts: 100244
+ Success: 77496
+
+---------->> Done 6000 out of 10000
+Block Average                   :
+    NumberOfParticles = 8.706500 
+ Frac. Acc.: 0.721644
+ Attempts: 150239
+ Success: 108419
+
+---------->> Done 8000 out of 10000
+Block Average                   :
+    NumberOfParticles = 8.599000 
+ Frac. Acc.: 0.666181
+ Attempts: 200366
+ Success: 133480
+
+---------->> Done 10000 out of 10000
+Block Average                   :
+    NumberOfParticles = 8.617000 
+ Frac. Acc.: 0.612810
+ Attempts: 250484
+ Success: 153499
+
+Number Of Attempts To Displace a Particle  : 250484
+Success: 153499 (61.280960)
+Number Of Exchange Attempts  : 374449 
+Addition Success : 12997 (3.470967) 
+Deletion Success : 12997 (3.470967) 
+
+Number of Molecules         : 8 
+Fourier Fluid-Fluid Energy  : 0.000000 
+Total Fluid-Fluid Energy    : -0.521536 
+Total Solid-Fluid Energy    : -70.556392 
+
+Total Energy End Of Simulation          : -71.077928
+    Running ff VdW Energy               : -0.521536
+    Running ff Ewald Short-rangeEnergy  : 0.000000
+    Running ff Fourier                  : 0.000000
+    Running sf VdW Energy               : -70.556392
+    Running Energy Total                 : -71.077928
+    Difference                           : 0.000000
+
+Average Pressure                  : 0.000000
+Average Number Of Particles       : 8.619400
+Heat capacity                     : 23.659998
+Loading (mmol/cm3)                : 0.397670

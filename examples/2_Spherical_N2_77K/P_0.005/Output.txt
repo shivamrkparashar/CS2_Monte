@@ -1,0 +1,164 @@
+===================================================================
+ 
+Input file data 
+ ------------------------------------------------------------------
+ 
+  Simulation Method                          : GCMC
+  Type of Simulation                         : 3
+  Number Of Equilibration Cycles             : 5000
+  Number Of Production Cycles                : 5000
+  Sample Frequency                           : 1
+  Probability To Attempt Displacement Move    : 0.500000
+  Probability To Attempt Rotation Move       : 0.000000
+  Probability To Attempt Exchange Move       : 0.500000
+  Maximum Displacement                       : 0.090000
+  Chemical Potential (reduced units)         : -14.000000
+  Temperature (reduced units)                : 0.500000
+  Box Length (in Sigma)                      : 9.000000
+  Gauge Cell Box Length (in Sigma)           : 0.000000
+  Total Number of Particles (Gauge + Pore)   : 0
+
+===================================================================
+  
+ Fluid-Fluid Parameters
+-------------------------------------------------------------------
+  Number of Adsorbate Atoms: 1
+  Symbol: N2
+    Sigma (in Angstrom)                      : 3.615000
+    Epsilon (in Kelvin)                      : 101.500000
+    Mass (in g/mol)                          : 28.000000
+    Charge (electronic)                      : 0.000000
+    VdWCutOff (in Sigma units)                  : 5.000000
+    ChargeCutOff (in Sigma units)               : 5.000000
+
+===================================================================
+  
+ Solid-Solid Parameters
+-------------------------------------------------------------------
+    Sigma ss (in Angstrom)                      : 3.373000
+    Epsilon ss (in Kelvin)                      : 27.900000
+    Surface density (Ang^3)                     : 0.045617
+    Delta (Ang)                                 : 3.354000
+    Outer Diameter/Width  (reduced units)       : 4.000000
+
+
+ ===================================================================
+ 
+Ewald Summation Parameters     
+-------------------------------------------------------------------
+Relative precession           :0.000001
+Alpha (reduced units)         :0.623719
+kmax                          :6
+
+
+ =================================================================
+
+Before Starting the Simulation
+-------------------------------------------------------------------
+
+Number of Molecules         : 0 
+Fourier Fluid-Fluid Energy  : 0.000000 
+Total Fluid-Fluid Energy    : 0.000000 
+Total Solid-Fluid Energy    : 0.000000 
+ Total Energy Initial Configuration: 0.000000
+ Total Virial Initial Configuration: 0.000000
+ Total Initial Number of Particles 0
+
+
+ =================================================================
+
+Start Equilibration
+-------------------------------------------------------------------
+
+
+ =================================================================
+
+Summary
+-------------------------------------------------------------------
+Number Of Displacement move attempts  : 256
+Success: 220 (85.94 %)
+Number Of Exchange move attempts  : 125049 
+Addition Success : 113 (0.09 %) 
+Deletion Success : 113 (0.09 %) 
+
+Number of Molecules         : 0 
+Fourier Fluid-Fluid Energy  : 0.000000 
+Total Fluid-Fluid Energy    : 0.000000 
+Total Solid-Fluid Energy    : 0.000000 
+
+Total Energy End Of Simulation          : 0.000000
+    Running ff VdW Energy               : 0.000000
+    Running ff Ewald Short-rangeEnergy  : 0.000000
+    Running ff Fourier                  : 0.000000
+    Running sf VdW Energy               : 0.000000
+    Running Energy Total                 : 0.000000
+    Difference                           : 0.000000
+
+
+ =================================================================
+
+Start Production
+-------------------------------------------------------------------
+---------->> Done 2000 out of 10000 Cycles
+Block Average:
+    NumberOfParticles = 0.002000 
+ Frac. Acc.: 0.848101
+ Attempts: 79
+ Success: 67
+
+---------->> Done 4000 out of 10000 Cycles
+Block Average:
+    NumberOfParticles = 0.001500 
+ Frac. Acc.: 0.789474
+ Attempts: 152
+ Success: 120
+
+---------->> Done 6000 out of 10000 Cycles
+Block Average:
+    NumberOfParticles = 0.001000 
+ Frac. Acc.: 0.730769
+ Attempts: 260
+ Success: 190
+
+---------->> Done 8000 out of 10000 Cycles
+Block Average:
+    NumberOfParticles = 0.001500 
+ Frac. Acc.: 0.680556
+ Attempts: 360
+ Success: 245
+
+---------->> Done 10000 out of 10000 Cycles
+Block Average:
+    NumberOfParticles = 0.003000 
+ Frac. Acc.: 0.641860
+ Attempts: 430
+ Success: 276
+
+
+
+ =================================================================
+
+Summary
+-------------------------------------------------------------------
+Number Of Displacement move attempts  : 430
+Success: 276 (64.19 %)
+Number Of Exchange move attempts  : 375132 
+Addition Success : 226 (0.06 %) 
+Deletion Success : 226 (0.06 %) 
+
+Number of Molecules         : 0 
+Fourier Fluid-Fluid Energy  : 0.000000 
+Total Fluid-Fluid Energy    : 0.000000 
+Total Solid-Fluid Energy    : 0.000000 
+
+Total Energy End Of Simulation          : 0.000000
+    Running ff VdW Energy               : 0.000000
+    Running ff Ewald Short-rangeEnergy  : 0.000000
+    Running ff Fourier                  : 0.000000
+    Running sf VdW Energy               : 0.000000
+    Running Energy Total                 : 0.000000
+    Difference                           : 0.000000
+
+Ideal gas pressure (Pa)       : 0.004877
+Average Number Of Particles       : 0.001800
+Loading (mmol/cm3)                : 0.001888
