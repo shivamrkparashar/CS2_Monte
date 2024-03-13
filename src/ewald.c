@@ -17,8 +17,7 @@ double EwaldSelfInteractionEnergy;  // Self Interaction Energy of one Adsorbate 
 /*
  * Initializes the alpha parameter and number of Wave vectors
  */
-void InitializeEwald(double precision)
-{
+void InitializeEwald(double precision) {
     double tol; // initial guess value of Alpha * ChargeCutOff
     double tol1;
     double rc; // Charge Charge cutoff in Angstroms
@@ -36,8 +35,8 @@ void InitializeEwald(double precision)
     Alpha = sqrt(fabs(log(precision * rc * tol))) / rc;  // in Angstrom -1
 
     tol1 = sqrt(fabs(log(precision * rc * SQR(2.0 * tol * Alpha))));
-    kmax = NINT(0.25 + Box *Sigma[primaryatom]* Alpha * tol1 / M_PI);
-    ReciprocalCutOffSquared = SQR(1.05*kmax);
+    kmax = NINT(0.25 + Box * Sigma[primaryatom] * Alpha * tol1 / M_PI);
+    ReciprocalCutOffSquared = SQR(1.05 * kmax);
 
     Alpha *= Sigma[primaryatom]; // in reduced units
     //Alpha = 0.20;
@@ -51,60 +50,55 @@ void InitializeEwald(double precision)
 
 }
 
-double DotProduct(VECTOR a, VECTOR b)
-{
-    return (a.x*b.x+a.y*b.y+a.z*b.z);
+double DotProduct(VECTOR a, VECTOR b) {
+    return (a.x * b.x + a.y * b.y + a.z * b.z);
 }
 
 // COMPLEMENTARY ERROR FUNCTION; THIS IS A REALLY GOOD ONE !!!
-double ErrorFunctionComplement(double x)
-{
-    double t,u,y;
-    const double PA=3.97886080735226000,P0=2.75374741597376782e-1,P1=4.90165080585318424e-1;
-    const double P2=7.74368199119538609e-1,P3=1.07925515155856677,P4=1.31314653831023098;
-    const double P5=1.37040217682338167,P6=1.18902982909273333,P7=8.05276408752910567e-1;
-    const double P8=3.57524274449531043e-1,P9=1.66207924969367356e-2,P10=-1.19463959964325415e-1;
-    const double P11=-8.38864557023001992e-2,P12=2.49367200053503304e-3,P13=3.90976845588484035e-2;
-    const double P14=1.61315329733252248e-2,P15=-1.33823644533460069e-2,P16=-1.27223813782122755e-2;
-    const double P17=3.83335126264887303e-3,P18=7.73672528313526668e-3,P19=-8.70779635317295828e-4;
-    const double P20=-3.96385097360513500e-3,P21=1.19314022838340944e-4,P22=1.27109764952614092e-3;
+double ErrorFunctionComplement(double x) {
+    double t, u, y;
+    const double PA = 3.97886080735226000, P0 = 2.75374741597376782e-1, P1 = 4.90165080585318424e-1;
+    const double P2 = 7.74368199119538609e-1, P3 = 1.07925515155856677, P4 = 1.31314653831023098;
+    const double P5 = 1.37040217682338167, P6 = 1.18902982909273333, P7 = 8.05276408752910567e-1;
+    const double P8 = 3.57524274449531043e-1, P9 = 1.66207924969367356e-2, P10 = -1.19463959964325415e-1;
+    const double P11 = -8.38864557023001992e-2, P12 = 2.49367200053503304e-3, P13 = 3.90976845588484035e-2;
+    const double P14 = 1.61315329733252248e-2, P15 = -1.33823644533460069e-2, P16 = -1.27223813782122755e-2;
+    const double P17 = 3.83335126264887303e-3, P18 = 7.73672528313526668e-3, P19 = -8.70779635317295828e-4;
+    const double P20 = -3.96385097360513500e-3, P21 = 1.19314022838340944e-4, P22 = 1.27109764952614092e-3;
 
-    t=PA/(PA+fabs(x));
-    u=t-0.5;
-    y=(((((((((P22*u+P21)*u+P20)*u+P19)*u+P18)*u+P17)*u+P16)*u+P15)*u+P14)*u+P13)*u+P12;
-    y=((((((((((((y*u+P11)*u+P10)*u+P9)*u+P8)*u+P7)*u+P6)*u+P5)*u+P4)*u+P3)*u+P2)*u+P1)*u+P0)*t*exp(-x*x);
-    if(x<0) y=2.0-y;
+    t = PA / (PA + fabs(x));
+    u = t - 0.5;
+    y = (((((((((P22 * u + P21) * u + P20) * u + P19) * u + P18) * u + P17) * u + P16) * u + P15) * u + P14) * u +
+         P13) * u + P12;
+    y = ((((((((((((y * u + P11) * u + P10) * u + P9) * u + P8) * u + P7) * u + P6) * u + P5) * u + P4) * u + P3) * u +
+           P2) * u + P1) * u + P0) * t * exp(-x * x);
+    if (x < 0) y = 2.0 - y;
     return y;
 }
 
-double ErrorFunction(double x)
-{
-    return 1.0-ErrorFunctionComplement(x);
+double ErrorFunction(double x) {
+    return 1.0 - ErrorFunctionComplement(x);
 }
 
-double EwaldFourierEnergyAdsorbate(VECTOR *PosPtr)
-{
+double EwaldFourierEnergyAdsorbate(VECTOR *PosPtr) {
 
     // 1. Calculates Fourier energy of one molecule at position PosPtr
 
     VECTOR Rk;
     double Rksq, exp_term;
-    double energy_sum=0;
+    double energy_sum = 0;
     double EnergyFourier;
     double EnergyEwald;
     double ksq;
 
-    for (int kx=-kmax; kx <= kmax; kx++)
-    {
-        Rk.x = 2*M_PI*kx/Box;
-        for (int ky=-kmax; ky <= kmax; ky++)
-        {
-            Rk.y = 2*M_PI*ky/Box;
-            for (int kz=-kmax; kz <= kmax; kz++)
-            {
-                Rk.z = 2*M_PI*kz/Box;
+    for (int kx = -kmax; kx <= kmax; kx++) {
+        Rk.x = 2 * M_PI * kx / Box;
+        for (int ky = -kmax; ky <= kmax; ky++) {
+            Rk.y = 2 * M_PI * ky / Box;
+            for (int kz = -kmax; kz <= kmax; kz++) {
+                Rk.z = 2 * M_PI * kz / Box;
                 Rksq = SQR(Rk.x) + SQR(Rk.y) + SQR(Rk.z);
-                ksq= SQR(kx) + SQR(ky) + SQR(kz);
+                ksq = SQR(kx) + SQR(ky) + SQR(kz);
 
                 //  Ignoring when kx = ky = kz =0 as the exp_term will blow up
                 //  And ignoring when Rksq is greater than the cutoff
@@ -114,8 +108,7 @@ double EwaldFourierEnergyAdsorbate(VECTOR *PosPtr)
                 float SumSine = 0;
 
                 // sum over all Coulombic atoms in old molecules
-                for(int aa=0; aa<NumberOfAdsorbateAtom; aa++)
-                {
+                for (int aa = 0; aa < NumberOfAdsorbateAtom; aa++) {
                     SumCosine += Charge[aa] * cos(DotProduct(Rk, PosPtr[aa]));
                     SumSine += Charge[aa] * sin(DotProduct(Rk, PosPtr[aa]));
                 }
@@ -128,7 +121,7 @@ double EwaldFourierEnergyAdsorbate(VECTOR *PosPtr)
 
     }
     // 1. Fourier energy
-    EnergyFourier = COULOMB_CONVERSION_FACTOR* (2*M_PI/CUBE(Box))*energy_sum;
+    EnergyFourier = COULOMB_CONVERSION_FACTOR * (2 * M_PI / CUBE(Box)) * energy_sum;
 
     // 2. Self-interaction energy of each gaussian cloud with itself
 
@@ -146,7 +139,7 @@ double FourierEnergyDifferenceAdsorbate(int New, int Old, int i) {
     // i = index of randomly picked molecule for translation, rotation, and deletion.
     // No role of i in addition move
 
-    if(!Charge[0]){
+    if (!Charge[0]) {
         return 0.0;
     }
     // 1. Calculates Fourier energy of a molecule at position PosPtr
@@ -165,7 +158,7 @@ double FourierEnergyDifferenceAdsorbate(int New, int Old, int i) {
             for (int kz = -kmax; kz <= kmax; kz++) {
                 Rk.z = 2 * M_PI * kz / Box;
                 Rksq = SQR(Rk.x) + SQR(Rk.y) + SQR(Rk.z);
-                ksq= SQR(kx) + SQR(ky) + SQR(kz);
+                ksq = SQR(kx) + SQR(ky) + SQR(kz);
 
                 //  Ignoring when kx = ky = kz =0 as the exp_term will blow up
                 //  And ignoring when ksq is greater than the cutoff
@@ -195,13 +188,14 @@ double FourierEnergyDifferenceAdsorbate(int New, int Old, int i) {
                 }
 
                 exp_term = exp(-0.25 * Rksq / SQR(Alpha)) / Rksq;
-                DeltaUFourier += exp_term * (SQR(SumCosine_new) + SQR(SumSine_new) - SQR(SumCosine_old) - SQR(SumSine_old));
+                DeltaUFourier +=
+                        exp_term * (SQR(SumCosine_new) + SQR(SumSine_new) - SQR(SumCosine_old) - SQR(SumSine_old));
 
             }
         }
 
     }
-    DeltaUFourier *= COULOMB_CONVERSION_FACTOR* (2*M_PI/CUBE(Box));
+    DeltaUFourier *= COULOMB_CONVERSION_FACTOR * (2 * M_PI / CUBE(Box));
 
     // Taking in the self interaction term into account
 
@@ -215,22 +209,21 @@ double FourierEnergyDifferenceAdsorbate(int New, int Old, int i) {
     return DeltaUFourier;
 }
 
-void SelfInteractionEwaldEnergy(void)
-{
+void SelfInteractionEwaldEnergy(void) {
     EwaldSelfInteractionEnergy = 0.0;
     double distance;
 
-   for (int aa=0; aa< NumberOfAdsorbateAtom; aa++)
-    {
-        for (int aa2 = 0; aa2 < NumberOfAdsorbateAtom; aa2++)
-        {
-            if (aa==aa2)  // self atomic energy
-                EwaldSelfInteractionEnergy += COULOMB_CONVERSION_FACTOR *Alpha / sqrt(M_PI) * SQR(Charge[aa]) ;
+    for (int aa = 0; aa < NumberOfAdsorbateAtom; aa++) {
+        for (int aa2 = 0; aa2 < NumberOfAdsorbateAtom; aa2++) {
+            if (aa == aa2)  // self atomic energy
+                EwaldSelfInteractionEnergy += COULOMB_CONVERSION_FACTOR * Alpha / sqrt(M_PI) * SQR(Charge[aa]);
             else   //  Energy of atoms (Gaussian clouds) within the same molecule
             {
                 // Interatomic distance, convert into reduced units
-                distance = fabs(AdsorbateAtomicDistance[aa] - AdsorbateAtomicDistance[aa2])/Sigma[primaryatom];
-                EwaldSelfInteractionEnergy += 0.5 * COULOMB_CONVERSION_FACTOR * Charge[aa] *Charge[aa2] * ErrorFunction(Alpha*distance)/distance;
+                distance = fabs(AdsorbateAtomicDistance[aa] - AdsorbateAtomicDistance[aa2]) / Sigma[primaryatom];
+                EwaldSelfInteractionEnergy +=
+                        0.5 * COULOMB_CONVERSION_FACTOR * Charge[aa] * Charge[aa2] * ErrorFunction(Alpha * distance) /
+                        distance;
             }
         }
     }

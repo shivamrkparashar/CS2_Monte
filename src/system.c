@@ -6,9 +6,9 @@ int PoreGeometry;
 char SimulationMethod[10];
 int Restart; // 0 if not restarting, 1 if restarting
 
-char* InputFileName;
+char *InputFileName;
 FILE *FileOutput; // Main output file
-FILE *FileMovie,*FileEnergy, *FileDens, *FileResult, *FileHistogram, *FileIGGCresults;
+FILE *FileMovie, *FileEnergy, *FileDens, *FileResult, *FileHistogram, *FileIGGCresults;
 
 double Box;    // Simulation Box Length
 double Temp;   // Temperature

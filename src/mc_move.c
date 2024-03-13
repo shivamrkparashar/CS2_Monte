@@ -10,100 +10,95 @@
 VECTOR NewPosition[MaxAdsorbateAtom];
 
 // attempts to displace a randomly selected particle
-void TranslationMoveAdsorbate(void)
-{
+void TranslationMoveAdsorbate(void) {
 
-    if(NumberOfParticles == 0) return;
+    if (NumberOfParticles == 0) return;
 
-  double EVdwNewff,VirialNew,EVdwOldff,VirialOld;
-  double ERealEwaldNewff, ERealEwaldOldff;
-  double EnergyNewsf, EnergyOldsf;
-  VECTOR Center;
-  double rndmx, rndmy, rndmz;
-  int i;
-  double DeltaUVdwff, DeltaUVdwsf, DeltaURealEwaldff, DeltaUFourierff, DeltaU;
- 
-  NumberOfDisplacementAttempts++;
+    double EVdwNewff, VirialNew, EVdwOldff, VirialOld;
+    double ERealEwaldNewff, ERealEwaldOldff;
+    double EnergyNewsf, EnergyOldsf;
+    VECTOR Center;
+    double rndmx, rndmy, rndmz;
+    int i;
+    double DeltaUVdwff, DeltaUVdwsf, DeltaURealEwaldff, DeltaUFourierff, DeltaU;
 
-  // choose a random particle
-  i=NumberOfParticles*RandomNumber();
+    NumberOfDisplacementAttempts++;
 
-  // calculate old energy
+    // choose a random particle
+    i = NumberOfParticles * RandomNumber();
+
+    // calculate old energy
     // passing the pointer struct of 1st atom of ith molecule
     EnergyParticlePair(Positions[i], i, 0, &EVdwOldff, &ERealEwaldOldff, &VirialOld);
-  EnergyExternal(Positions[i], &EnergyOldsf);
+    EnergyExternal(Positions[i], &EnergyOldsf);
 
-  // give a random displacement
+    // give a random displacement
     rndmx = RandomNumber();
     rndmy = RandomNumber();
     rndmz = RandomNumber();
-    for (int aa=0; aa<NumberOfAdsorbateAtom; aa++)
-    {
+    for (int aa = 0; aa < NumberOfAdsorbateAtom; aa++) {
         NewPosition[aa].x = Positions[i][aa].x + (rndmx - 0.5) * MaximumDisplacement;
         NewPosition[aa].y = Positions[i][aa].y + (rndmy - 0.5) * MaximumDisplacement;
         NewPosition[aa].z = Positions[i][aa].z + (rndmz - 0.5) * MaximumDisplacement;
     }
 
-  // calculate new energy between NewParticle position and all j=0 to NumberOfParticles except j=i
+    // calculate new energy between NewParticle position and all j=0 to NumberOfParticles except j=i
     EnergyParticlePair(NewPosition, i, 0, &EVdwNewff, &ERealEwaldNewff, &VirialNew);
-  EnergyExternal(NewPosition, &EnergyNewsf);
+    EnergyExternal(NewPosition, &EnergyNewsf);
 
     DeltaUFourierff = FourierEnergyDifferenceAdsorbate(1, 1, i);
-    DeltaURealEwaldff = ERealEwaldNewff - ERealEwaldOldff ;
+    DeltaURealEwaldff = ERealEwaldNewff - ERealEwaldOldff;
 
-    DeltaUVdwff = EVdwNewff  - EVdwOldff;
-    DeltaUVdwsf = EnergyNewsf- EnergyOldsf;
+    DeltaUVdwff = EVdwNewff - EVdwOldff;
+    DeltaUVdwsf = EnergyNewsf - EnergyOldsf;
 
-  DeltaU = DeltaUVdwff + DeltaURealEwaldff + DeltaUFourierff + DeltaUVdwsf;
+    DeltaU = DeltaUVdwff + DeltaURealEwaldff + DeltaUFourierff + DeltaUVdwsf;
 
-  if(RandomNumber()<exp(-Beta*(DeltaU)))
-  {
-      // accept
-      NumberOfAcceptedDisplacementMoves++;
-      RunningVdwEnergyff += DeltaUVdwff;
-      RunningVdwEnergysf += DeltaUVdwsf;
-      RunningRealEwaldEnergyff += DeltaURealEwaldff;
-      RunningFourierEnergyff += DeltaUFourierff;
-      RunningEnergy+=DeltaU;
-      RunningVirial+=(VirialNew-VirialOld);
+    if (RandomNumber() < exp(-Beta * (DeltaU))) {
+        // accept
+        NumberOfAcceptedDisplacementMoves++;
+        RunningVdwEnergyff += DeltaUVdwff;
+        RunningVdwEnergysf += DeltaUVdwsf;
+        RunningRealEwaldEnergyff += DeltaURealEwaldff;
+        RunningFourierEnergyff += DeltaUFourierff;
+        RunningEnergy += DeltaU;
+        RunningVirial += (VirialNew - VirialOld);
 
-      Center = CenterOfMass(NewPosition);
+        Center = CenterOfMass(NewPosition);
 
-      // put particle in simulation box
-      if (Center.x < 0.0)
-          for (int aa=0; aa<NumberOfAdsorbateAtom; aa++)
-              NewPosition[aa].x += Box;
-      else if (Center.x >= Box)
-          for (int aa=0; aa<NumberOfAdsorbateAtom; aa++)
-              NewPosition[aa].x -= Box;
+        // put particle in simulation box
+        if (Center.x < 0.0)
+            for (int aa = 0; aa < NumberOfAdsorbateAtom; aa++)
+                NewPosition[aa].x += Box;
+        else if (Center.x >= Box)
+            for (int aa = 0; aa < NumberOfAdsorbateAtom; aa++)
+                NewPosition[aa].x -= Box;
 
-      if (Center.y < 0.0)
-          for (int aa=0; aa<NumberOfAdsorbateAtom; aa++)
-              NewPosition[aa].y += Box;
-      else if (Center.y >= Box)
-          for (int aa=0; aa<NumberOfAdsorbateAtom; aa++)
-              NewPosition[aa].y -= Box;
+        if (Center.y < 0.0)
+            for (int aa = 0; aa < NumberOfAdsorbateAtom; aa++)
+                NewPosition[aa].y += Box;
+        else if (Center.y >= Box)
+            for (int aa = 0; aa < NumberOfAdsorbateAtom; aa++)
+                NewPosition[aa].y -= Box;
 
-      if (Center.z < 0.0)
-          for (int aa=0; aa<NumberOfAdsorbateAtom; aa++)
-              NewPosition[aa].z += Box;
-      else if (Center.z >= Box)
-          for (int aa=0; aa<NumberOfAdsorbateAtom; aa++)
-              NewPosition[aa].z -= Box;
+        if (Center.z < 0.0)
+            for (int aa = 0; aa < NumberOfAdsorbateAtom; aa++)
+                NewPosition[aa].z += Box;
+        else if (Center.z >= Box)
+            for (int aa = 0; aa < NumberOfAdsorbateAtom; aa++)
+                NewPosition[aa].z -= Box;
 
-      // update new position
+        // update new position
 
-      for (int aa=0; aa<NumberOfAdsorbateAtom; aa++)
-      {
-          Positions[i][aa].x = NewPosition[aa].x;
-          Positions[i][aa].y = NewPosition[aa].y;
-          Positions[i][aa].z = NewPosition[aa].z;
-      }
-  }
+        for (int aa = 0; aa < NumberOfAdsorbateAtom; aa++) {
+            Positions[i][aa].x = NewPosition[aa].x;
+            Positions[i][aa].y = NewPosition[aa].y;
+            Positions[i][aa].z = NewPosition[aa].z;
+        }
+    }
 }
-void ExchangeMoveAdsorbate(void)
 
-{
+void ExchangeMoveAdsorbate(void) {
     // attempts to add/remove a randomly selected particle
 
     double DeltaUVdwff, VirialChange;
@@ -115,14 +110,13 @@ void ExchangeMoveAdsorbate(void)
 
     NumberOfExchangeAttempts++;
 
-    if (RandomNumber() < 0.5)
-    {
+    if (RandomNumber() < 0.5) {
         // Particle Removal
 
         if (NumberOfParticles == 0) return; // do nothing
 
         // choose a random particle
-        i = NumberOfParticles*RandomNumber(); // i belongs integral values in [0 to N-1]
+        i = NumberOfParticles * RandomNumber(); // i belongs integral values in [0 to N-1]
 
 
 
@@ -130,7 +124,7 @@ void ExchangeMoveAdsorbate(void)
         // DeltaUVdwff = U(N) - U(N-1)
         EnergyParticlePair(Positions[i], i, 0, &DeltaUVdwff, &DeltaURealEwaldff, &VirialChange);
         // Solid fluid energy for particle i
-        EnergyExternal(Positions[i],&DeltaUVdwsf);
+        EnergyExternal(Positions[i], &DeltaUVdwsf);
         // Fourier space difference in energy = U(New) - U(Old) = U(N-1) - U(N)
         DeltaUFourierff = FourierEnergyDifferenceAdsorbate(0, 1, i);
 
@@ -138,8 +132,7 @@ void ExchangeMoveAdsorbate(void)
         DeltaU = -DeltaUVdwff - DeltaURealEwaldff - DeltaUVdwsf + DeltaUFourierff;
         arg = NumberOfParticles * Lambda3_Sigma3 / VolumeOfPore * exp(-Beta * DeltaU) * exp(-Beta * Chempot);
 
-        if(RandomNumber() < arg)
-        {
+        if (RandomNumber() < arg) {
             //accept and Remove the Particle
             NumberOfAcceptedDeletionMoves++;
             RunningVdwEnergyff -= DeltaUVdwff;
@@ -151,14 +144,12 @@ void ExchangeMoveAdsorbate(void)
 
             NumberOfParticles -= 1;
             // Move the last particle to the removed particle's position
-            for (int aa=0; aa<NumberOfAdsorbateAtom; aa++)
+            for (int aa = 0; aa < NumberOfAdsorbateAtom; aa++)
                 Positions[i][aa] = Positions[NumberOfParticles][aa];
 
         }
 
-    }
-    else
-    {
+    } else {
 
         // Particle addition
         //RandomPosition(&NewPosition);
@@ -167,13 +158,12 @@ void ExchangeMoveAdsorbate(void)
         EnergyParticlePair(NewPosition, NumberOfParticles, 0, &DeltaUVdwff, &DeltaURealEwaldff, &VirialChange);
         EnergyExternal(NewPosition, &DeltaUVdwsf);
         // Difference in Fourier space energy
-        DeltaUFourierff =  FourierEnergyDifferenceAdsorbate(1, 0, 0);
+        DeltaUFourierff = FourierEnergyDifferenceAdsorbate(1, 0, 0);
 
         DeltaU = DeltaUVdwff + DeltaURealEwaldff + DeltaUVdwsf + DeltaUFourierff;
-        arg = VolumeOfPore/ Lambda3_Sigma3 / (NumberOfParticles + 1) * exp(-Beta * DeltaU) * exp(Beta * Chempot);
+        arg = VolumeOfPore / Lambda3_Sigma3 / (NumberOfParticles + 1) * exp(-Beta * DeltaU) * exp(Beta * Chempot);
 
-        if(RandomNumber()<arg)
-        {
+        if (RandomNumber() < arg) {
             //accept
             NumberOfAcceptedAdditionMoves++;
             RunningVdwEnergyff += DeltaUVdwff;
@@ -183,7 +173,7 @@ void ExchangeMoveAdsorbate(void)
             RunningEnergy += DeltaU;
             RunningVirial += VirialChange;
 
-            for (int aa=0; aa<NumberOfAdsorbateAtom; aa++)
+            for (int aa = 0; aa < NumberOfAdsorbateAtom; aa++)
                 Positions[NumberOfParticles][aa] = NewPosition[aa];
             NumberOfParticles += 1;
 
@@ -193,9 +183,7 @@ void ExchangeMoveAdsorbate(void)
 
 }
 
-void ExchangeMoveAdsorbateGaugeCell(void)
-
-{
+void ExchangeMoveAdsorbateGaugeCell(void) {
     // attempts to add/remove a randomly selected particle
 
     double DeltaUVdwff, VirialChange;
@@ -207,14 +195,13 @@ void ExchangeMoveAdsorbateGaugeCell(void)
 
     NumberOfExchangeAttempts++;
 
-    if (RandomNumber() < 0.5)
-    {
+    if (RandomNumber() < 0.5) {
         // Particle Removal
 
         if (NumberOfParticles == 0) return; // do nothing
 
         // choose a random particle
-        i = NumberOfParticles*RandomNumber(); // i belongs integral values in [0 to N-1]
+        i = NumberOfParticles * RandomNumber(); // i belongs integral values in [0 to N-1]
 
 
 
@@ -222,17 +209,17 @@ void ExchangeMoveAdsorbateGaugeCell(void)
         // DeltaUVdwff = U(N) - U(N-1)
         EnergyParticlePair(Positions[i], i, 0, &DeltaUVdwff, &DeltaURealEwaldff, &VirialChange);
         // Solid fluid energy for particle i
-        EnergyExternal(Positions[i],&DeltaUVdwsf);
+        EnergyExternal(Positions[i], &DeltaUVdwsf);
         // Fourier space difference in energy = U(New) - U(Old) = U(N-1) - U(N)
         DeltaUFourierff = FourierEnergyDifferenceAdsorbate(0, 1, i);
 
         // DeltaU =  U(New) - U(Old) = U(N-1) - U(N)
         DeltaU = -DeltaUVdwff - DeltaURealEwaldff - DeltaUVdwsf + DeltaUFourierff;
         GaugeCellNumberOfParticles = Ntotal - NumberOfParticles;
-        arg =  GaugeCellVolume*NumberOfParticles/(GaugeCellNumberOfParticles+1)/VolumeOfPore*exp(-Beta * DeltaU);
+        arg = GaugeCellVolume * NumberOfParticles / (GaugeCellNumberOfParticles + 1) / VolumeOfPore *
+              exp(-Beta * DeltaU);
 
-        if(RandomNumber() < arg)
-        {
+        if (RandomNumber() < arg) {
             //accept and Remove the Particle
             NumberOfAcceptedDeletionMoves++;
             RunningVdwEnergyff -= DeltaUVdwff;
@@ -244,14 +231,12 @@ void ExchangeMoveAdsorbateGaugeCell(void)
 
             NumberOfParticles -= 1;
             // Move the last particle to the removed particle's position
-            for (int aa=0; aa<NumberOfAdsorbateAtom; aa++)
+            for (int aa = 0; aa < NumberOfAdsorbateAtom; aa++)
                 Positions[i][aa] = Positions[NumberOfParticles][aa];
 
         }
 
-    }
-    else
-    {
+    } else {
 
         // Particle addition
         //RandomPosition(&NewPosition);
@@ -260,15 +245,15 @@ void ExchangeMoveAdsorbateGaugeCell(void)
         EnergyParticlePair(NewPosition, NumberOfParticles, 0, &DeltaUVdwff, &DeltaURealEwaldff, &VirialChange);
         EnergyExternal(NewPosition, &DeltaUVdwsf);
         // Difference in Fourier space energy
-        DeltaUFourierff =  FourierEnergyDifferenceAdsorbate(1, 0, 0);
+        DeltaUFourierff = FourierEnergyDifferenceAdsorbate(1, 0, 0);
 
         DeltaU = DeltaUVdwff + DeltaURealEwaldff + DeltaUVdwsf + DeltaUFourierff;
 
         GaugeCellNumberOfParticles = Ntotal - NumberOfParticles;
-        arg = GaugeCellNumberOfParticles * VolumeOfPore/(NumberOfParticles+1)/ GaugeCellVolume*exp(-Beta * DeltaU);
+        arg = GaugeCellNumberOfParticles * VolumeOfPore / (NumberOfParticles + 1) / GaugeCellVolume *
+              exp(-Beta * DeltaU);
 
-        if(RandomNumber()<arg)
-        {
+        if (RandomNumber() < arg) {
             //accept
             NumberOfAcceptedAdditionMoves++;
             RunningVdwEnergyff += DeltaUVdwff;
@@ -278,7 +263,7 @@ void ExchangeMoveAdsorbateGaugeCell(void)
             RunningEnergy += DeltaU;
             RunningVirial += VirialChange;
 
-            for (int aa=0; aa<NumberOfAdsorbateAtom; aa++)
+            for (int aa = 0; aa < NumberOfAdsorbateAtom; aa++)
                 Positions[NumberOfParticles][aa] = NewPosition[aa];
             NumberOfParticles += 1;
 
@@ -288,62 +273,57 @@ void ExchangeMoveAdsorbateGaugeCell(void)
 
 }
 
-void RandomPosition(VECTOR *NewPos)
-{
+void RandomPosition(VECTOR *NewPos) {
     // Returns one random position vector within a pore
 
-    if(PoreGeometry == 0)
-    {
+    if (PoreGeometry == 0) {
         // For Particles in a box
-        NewPos->x = RandomNumber()*Box;
-        NewPos->y = RandomNumber()*Box;
-        NewPos->z = RandomNumber()*Box;
+        NewPos->x = RandomNumber() * Box;
+        NewPos->y = RandomNumber() * Box;
+        NewPos->z = RandomNumber() * Box;
 
     }
 
-    if(PoreGeometry == 1)
-    {
+    if (PoreGeometry == 1) {
         // For Cylindrical pore
-        double angle = 2*M_PI* RandomNumber();
+        double angle = 2 * M_PI * RandomNumber();
         // This radius is inner radius of cylinder
         // Bonddistance is also subtracted from radius so that O in CO2 do not overlap with solid.
-        double radius = (Diameter - Sigmass/Sigma[primaryatom] - 2*BondDistance)/2*sqrt(RandomNumber());
-        NewPos->x = Box/2 + radius*cos(angle);
-        NewPos->y = Box/2 + radius*sin(angle);
-        NewPos->z = RandomNumber()*Box;
+        double radius = (Diameter - Sigmass / Sigma[primaryatom] - 2 * BondDistance) / 2 * sqrt(RandomNumber());
+        NewPos->x = Box / 2 + radius * cos(angle);
+        NewPos->y = Box / 2 + radius * sin(angle);
+        NewPos->z = RandomNumber() * Box;
 
     }
 
-    if(PoreGeometry == 2)
-    {
+    if (PoreGeometry == 2) {
         // For Slit pore
-        NewPos->x = RandomNumber()*Box;
-        NewPos->y = RandomNumber()*Box;
+        NewPos->x = RandomNumber() * Box;
+        NewPos->y = RandomNumber() * Box;
         // Bonddistance is also subtracted from radius so that O in CO2 do not overlap with solid.
-        NewPos->z = (Box - (Diameter - BondDistance) )/2 + RandomNumber()* (Diameter - BondDistance);
+        NewPos->z = (Box - (Diameter - BondDistance)) / 2 + RandomNumber() * (Diameter - BondDistance);
 
     }
 
-    if(PoreGeometry == 3)
-    {
+    if (PoreGeometry == 3) {
         // Spherical pore
 
-        double Radius = (Diameter- Sigmass/Sigma[primaryatom])/2.;
+        double Radius = (Diameter - Sigmass / Sigma[primaryatom]) / 2.;
         double theta, phi, r, rnd;
-        theta = RandomNumber()*2*M_PI;
+        theta = RandomNumber() * 2 * M_PI;
         rnd = RandomNumber();
-        phi = acos(2*rnd - 1);
-        r = Radius*pow(RandomNumber(), 1/3.);
+        phi = acos(2 * rnd - 1);
+        r = Radius * pow(RandomNumber(), 1 / 3.);
 
-        NewPos->x = Box/2 + r*sin(phi)*cos(theta);
-        NewPos->y = Box/2 + r*sin(phi)*sin(theta);
-        NewPos->z = Box/2 + r*cos(phi);
+        NewPos->x = Box / 2 + r * sin(phi) * cos(theta);
+        NewPos->y = Box / 2 + r * sin(phi) * sin(theta);
+        NewPos->z = Box / 2 + r * cos(phi);
 
     }
 
 }
-void RandomMoleculePosition(VECTOR *PosPtr)
-{
+
+void RandomMoleculePosition(VECTOR *PosPtr) {
     /*
      * Returns position of all the atoms of adsorbate molecules inserted at a random
      * location and random orientation
@@ -357,20 +337,19 @@ void RandomMoleculePosition(VECTOR *PosPtr)
 
 }
 
-void RandomMoleculeOrientation(VECTOR Center, VECTOR *PosPtr)
-{
+void RandomMoleculeOrientation(VECTOR Center, VECTOR *PosPtr) {
     // Returns PosPtr array of vector with Center vector
 
     VECTOR Orientation;
-    double theta = RandomNumber()*2*M_PI;  // 0 < theta < 2pi
-    double u = 2*RandomNumber() - 1;  // -1 < u < 1
+    double theta = RandomNumber() * 2 * M_PI;  // 0 < theta < 2pi
+    double u = 2 * RandomNumber() - 1;  // -1 < u < 1
 
     // Central atom
     PosPtr[1] = Center;
 
     // Random point on a unit sphere
-    Orientation.x = sqrt(1-SQR(u))*cos(theta);
-    Orientation.y = sqrt(1-SQR(u))*sin(theta);
+    Orientation.x = sqrt(1 - SQR(u)) * cos(theta);
+    Orientation.y = sqrt(1 - SQR(u)) * sin(theta);
     Orientation.z = u;
 
     //  atom left to the central atom coordinates (Oxygen left)
@@ -385,13 +364,12 @@ void RandomMoleculeOrientation(VECTOR Center, VECTOR *PosPtr)
 
 }
 
-void RotationMoveAdsorbate(void)
-{
+void RotationMoveAdsorbate(void) {
     /*
      * The rotation move randomly rotates the adsorbate molecule along a randomly chosen vector.
      *
      */
-    if (NumberOfParticles == 0 ) return;
+    if (NumberOfParticles == 0) return;
     if (NumberOfAdsorbateAtom == 1) return;  // Rotation not required for monoatomic molecule
 
     double EVdwNewff, VirialNew, EVdwOldff, VirialOld;
@@ -403,11 +381,11 @@ void RotationMoveAdsorbate(void)
 
     NumberOfRotationAttempts++;
     // Choose a random Particle
-    i = NumberOfParticles*RandomNumber();
+    i = NumberOfParticles * RandomNumber();
 
     // Calculate Old Energy: ff and sf components
     EnergyParticlePair(Positions[i], i, 0, &EVdwOldff, &ERealEwaldOldff, &VirialOld);
-    EnergyExternal(Positions[i], & EnergyOldsf);
+    EnergyExternal(Positions[i], &EnergyOldsf);
 
     // Generate new position by randomly rotating the molecule about its center
     Center = Positions[i][1];
@@ -424,58 +402,53 @@ void RotationMoveAdsorbate(void)
     DeltaURealEwaldff = ERealEwaldNewff - ERealEwaldOldff;
     DeltaU = DeltaUVdwff + DeltaURealEwaldff + DeltaUFourierff + DeltaUVdwsf;
 
-    if (RandomNumber() < exp(-Beta*DeltaU))
-    {
+    if (RandomNumber() < exp(-Beta * DeltaU)) {
         // Accept
         NumberOfAcceptedRotationMoves++;
         RunningVdwEnergyff += DeltaUVdwff;
         RunningVdwEnergysf += DeltaUVdwsf;
         RunningRealEwaldEnergyff += DeltaURealEwaldff;
         RunningFourierEnergyff += DeltaUFourierff;
-        RunningEnergy+=DeltaU;
-        RunningVirial+=(VirialNew-VirialOld);
+        RunningEnergy += DeltaU;
+        RunningVirial += (VirialNew - VirialOld);
 
         // put particle in simulation box
         if (Center.x < 0.0)
-          for (int aa=0; aa<NumberOfAdsorbateAtom; aa++)
-              NewPosition[aa].x += Box;
+            for (int aa = 0; aa < NumberOfAdsorbateAtom; aa++)
+                NewPosition[aa].x += Box;
         else if (Center.x >= Box)
-          for (int aa=0; aa<NumberOfAdsorbateAtom; aa++)
-              NewPosition[aa].x -= Box;
+            for (int aa = 0; aa < NumberOfAdsorbateAtom; aa++)
+                NewPosition[aa].x -= Box;
 
         if (Center.y < 0.0)
-          for (int aa=0; aa<NumberOfAdsorbateAtom; aa++)
-              NewPosition[aa].y += Box;
+            for (int aa = 0; aa < NumberOfAdsorbateAtom; aa++)
+                NewPosition[aa].y += Box;
         else if (Center.y >= Box)
-          for (int aa=0; aa<NumberOfAdsorbateAtom; aa++)
-              NewPosition[aa].y -= Box;
+            for (int aa = 0; aa < NumberOfAdsorbateAtom; aa++)
+                NewPosition[aa].y -= Box;
 
         if (Center.z < 0.0)
-          for (int aa=0; aa<NumberOfAdsorbateAtom; aa++)
-              NewPosition[aa].z += Box;
+            for (int aa = 0; aa < NumberOfAdsorbateAtom; aa++)
+                NewPosition[aa].z += Box;
         else if (Center.z >= Box)
-          for (int aa=0; aa<NumberOfAdsorbateAtom; aa++)
-              NewPosition[aa].z -= Box;
+            for (int aa = 0; aa < NumberOfAdsorbateAtom; aa++)
+                NewPosition[aa].z -= Box;
 
         // update new position
-        for (int aa=0; aa<NumberOfAdsorbateAtom; aa++)
-        {
-          Positions[i][aa].x = NewPosition[aa].x;
-          Positions[i][aa].y = NewPosition[aa].y;
-          Positions[i][aa].z = NewPosition[aa].z;
+        for (int aa = 0; aa < NumberOfAdsorbateAtom; aa++) {
+            Positions[i][aa].x = NewPosition[aa].x;
+            Positions[i][aa].y = NewPosition[aa].y;
+            Positions[i][aa].z = NewPosition[aa].z;
         }
     }
 }
 
 
-
-VECTOR CenterOfMass(VECTOR *MoleculePos)
-{
+VECTOR CenterOfMass(VECTOR *MoleculePos) {
     VECTOR Center;
     Center.x = Center.y = Center.z = 0.0;
 
-    for (int aa=0; aa<NumberOfAdsorbateAtom; aa++)
-    {
+    for (int aa = 0; aa < NumberOfAdsorbateAtom; aa++) {
         Center.x += MoleculePos[aa].x;
         Center.y += MoleculePos[aa].y;
         Center.z += MoleculePos[aa].z;

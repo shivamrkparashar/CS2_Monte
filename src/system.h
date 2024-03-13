@@ -2,6 +2,7 @@
 #define SYSTEM_H
 
 #include <stdio.h>
+
 #define Npmax 10000
 #define MaxAdsorbateAtom 3
 #define MinimumInnerSteps 50
@@ -10,8 +11,8 @@
 
 #define SQR(x) ((x)*(x))
 #define CUBE(x) ((x)*(x)*(x))
-#define MIN(x,y) ((x)<(y)?(x):(y))
-#define MAX(x,y) ((x)>(y)?(x):(y))
+#define MIN(x, y) ((x)<(y)?(x):(y))
+#define MAX(x, y) ((x)>(y)?(x):(y))
 #define ANGSTROM 1e-10
 #define ATOMIC_MASS_UNIT 1.6605402e-27   //kg
 #define PLANCK_CONSTANT 6.6260687652e-34 // J.s
@@ -20,20 +21,21 @@
 #define ELECTRONIC_CHARGE 1.60217662e-19 // Coulombs
 #define ELECTRIC_CONSTANT  8.8541878176e-12     // C^2/(N.m^2)  // Epsilon naught
 
-enum{EQUILIBRATION=1,PRODUCTION=2};
+enum {
+    EQUILIBRATION = 1, PRODUCTION = 2
+};
 
-typedef struct
-{
-  double x;
-  double y;
-  double z;
+typedef struct {
+    double x;
+    double y;
+    double z;
 } VECTOR;
 
 extern int PoreGeometry; // 0: Box, 1: Cylindrical pore, 2: Slit pore, 3: Spherical pore
 extern char SimulationMethod[10];   // 'GCMC' or 'IGGC'
 extern int Restart;
 
-extern char* InputFileName;
+extern char *InputFileName;
 
 extern FILE *FileOutput; // Main output file
 extern FILE *FileMovie, *FileEnergy, *FileDens, *FileResult, *FileHistogram, *FileIGGCresults;
@@ -113,17 +115,24 @@ extern double IdealGasPressure, IdealGasPressureInSI;
 extern double PotentialatCutoff;
 
 void Adjust(void);
+
 void ReadInputFile(int argc, char *argv[]);
+
 void PrintInputData(void);
 
 
-void Sample(int i,double En,double Vir,double *Pressure,FILE *FilePtr);
+void Sample(int i, double En, double Vir, double *Pressure, FILE *FilePtr);
+
 void WritePdb(FILE *FilePtr);
+
 void Store(void);
+
 void Lattice(void);
 
 void SetSimulationUnits(void);
+
 void CreateOutputFiles(void);
+
 void WriteResult(double AverageNumberOfParticle, double CPUTimeUsed);
 
 #endif

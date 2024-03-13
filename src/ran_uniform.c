@@ -19,7 +19,7 @@
 /* See the GNU Library General Public License for more details.    */
 /* You should have received a copy of the GNU Library General      */
 /* Public License along with this library; if not, write to the    */
-/* Free Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA   */ 
+/* Free Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA   */
 /* 02111-1307  USA                                                 */
 /*                                                                 */
 /* Copyright (C) 1997 Makoto Matsumoto and Takuji Nishimura.       */
@@ -40,11 +40,12 @@
 
 #include<stdio.h>
 #include<math.h>
+
 #define N                     624
 #define M                     397
-#define MATRIX_A              0x9908b0df   
-#define UPPER_MASK            0x80000000 
-#define LOWER_MASK            0x7fffffff 
+#define MATRIX_A              0x9908b0df
+#define UPPER_MASK            0x80000000
+#define LOWER_MASK            0x7fffffff
 #define TEMPERING_MASK_B      0x9d2c5680
 #define TEMPERING_MASK_C      0xefc60000
 #define TEMPERING_SHIFT_U(y)  (y >> 11)
@@ -55,71 +56,65 @@
 static unsigned long mt[N];
 static int mti;
 
-double RandomNumber(void)
-{
-  int kk;
-  unsigned long y;
-  static unsigned long mag01[2]={0x0,MATRIX_A};
-  double zzz=2.0;
+double RandomNumber(void) {
+    int kk;
+    unsigned long y;
+    static unsigned long mag01[2] = {0x0, MATRIX_A};
+    double zzz = 2.0;
 
-  while(zzz<0.0000000000001e0||zzz>0.9999999999999e0)
-  {
-    if (mti>= N) 
-    { 
-      for (kk=0;kk<N-M;kk++) 
-      {
-        y=(mt[kk]&UPPER_MASK)|(mt[kk+1]&LOWER_MASK);
-        mt[kk]=mt[kk+M]^(y>>1)^mag01[y&0x1];
-      }
-      for (;kk<N-1;kk++) 
-      {
-        y=(mt[kk]&UPPER_MASK)|(mt[kk+1]&LOWER_MASK);
-           mt[kk]=mt[kk+(M-N)]^(y>>1)^mag01[y&0x1];
-      }
-      y=(mt[N-1]&UPPER_MASK)|(mt[0]&LOWER_MASK);
-         mt[N-1]=mt[M-1]^(y>>1)^mag01[y & 0x1];
-      mti = 0;
+    while (zzz < 0.0000000000001e0 || zzz > 0.9999999999999e0) {
+        if (mti >= N) {
+            for (kk = 0; kk < N - M; kk++) {
+                y = (mt[kk] & UPPER_MASK) | (mt[kk + 1] & LOWER_MASK);
+                mt[kk] = mt[kk + M] ^ (y >> 1) ^ mag01[y & 0x1];
+            }
+            for (; kk < N - 1; kk++) {
+                y = (mt[kk] & UPPER_MASK) | (mt[kk + 1] & LOWER_MASK);
+                mt[kk] = mt[kk + (M - N)] ^ (y >> 1) ^ mag01[y & 0x1];
+            }
+            y = (mt[N - 1] & UPPER_MASK) | (mt[0] & LOWER_MASK);
+            mt[N - 1] = mt[M - 1] ^ (y >> 1) ^ mag01[y & 0x1];
+            mti = 0;
+        }
+        y = mt[mti++];
+        y ^= TEMPERING_SHIFT_U(y);
+        y ^= TEMPERING_SHIFT_S(y) & TEMPERING_MASK_B;
+        y ^= TEMPERING_SHIFT_T(y) & TEMPERING_MASK_C;
+        y ^= TEMPERING_SHIFT_L(y);
+        zzz = ((double) y / (unsigned long) 0xffffffff);
     }
-    y=mt[mti++];
-    y^=TEMPERING_SHIFT_U(y);
-    y^=TEMPERING_SHIFT_S(y)&TEMPERING_MASK_B;
-    y^=TEMPERING_SHIFT_T(y)&TEMPERING_MASK_C;
-    y^=TEMPERING_SHIFT_L(y);
-    zzz=((double)y/(unsigned long)0xffffffff);
-  }
-  return(zzz);
+    return (zzz);
 }
 
-void InitializeRandomNumberGenerator(double seed)
-{
-  unsigned long myint;
-  int kk;
-  double dummy;
+void InitializeRandomNumberGenerator(double seed) {
+    unsigned long myint;
+    int kk;
+    double dummy;
 
-  myint=(unsigned long)((seed)*429496729);
-  myint=myint+1000;
+    myint = (unsigned long) ((seed) * 429496729);
+    myint = myint + 1000;
 
-  if(myint%2==0) 
-    myint=myint+1;
-  else
-    myint=myint+2;
+    if (myint % 2 == 0)
+        myint = myint + 1;
+    else
+        myint = myint + 2;
 
-  mt[0]=myint&0xffffffff;
+    mt[0] = myint & 0xffffffff;
 
-  for(mti=1;mti<N;mti++)
-    mt[mti]=(69069*mt[mti-1])&0xffffffff;
+    for (mti = 1; mti < N; mti++)
+        mt[mti] = (69069 * mt[mti - 1]) & 0xffffffff;
 
-  for(kk=1;kk<10000;kk++)
-    dummy=RandomNumber();
+    for (kk = 1; kk < 10000; kk++)
+        dummy = RandomNumber();
 
-  return;
+    return;
 }
 
 #undef N
 #undef M
 #undef MATRIX_A
 #undef UPPER_MASK
-#undef LOWER_MASK 
+#undef LOWER_MASK
 #undef TEMPERING_MASK_B
 #undef TEMPERING_MASK_C
 #undef TEMPERING_SHIFT_U
@@ -127,22 +122,18 @@ void InitializeRandomNumberGenerator(double seed)
 #undef TEMPERING_SHIFT_T
 #undef TEMPERING_SHIFT_L
 
-double RandomGaussianNumber(void)
-{
-  double ran1,ran2,ransq;
+double RandomGaussianNumber(void) {
+    double ran1, ran2, ransq;
 
-  do
-  {
-    ran1=2.0*RandomNumber()-1.0;
-    ran2=2.0*RandomNumber()-1.0;
-    ransq=ran1*ran1+ran2*ran2;
-  }
-  while((ransq>1.0)||(ransq<0.0));
-  return ran1*sqrt(-2.0*log(ransq)/ransq);
+    do {
+        ran1 = 2.0 * RandomNumber() - 1.0;
+        ran2 = 2.0 * RandomNumber() - 1.0;
+        ransq = ran1 * ran1 + ran2 * ran2;
+    } while ((ransq > 1.0) || (ransq < 0.0));
+    return ran1 * sqrt(-2.0 * log(ransq) / ransq);
 }
 
 // Generates A Random Velocity According To A Boltzmann Distribution
-double RandomVelocity(double temperature)
-{
-  return sqrt(temperature)*RandomGaussianNumber();
+double RandomVelocity(double temperature) {
+    return sqrt(temperature) * RandomGaussianNumber();
 }

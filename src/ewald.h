@@ -14,10 +14,17 @@ extern double ReciprocalCutOffSquared;  // the squared cutoff in fourier space
 extern double EwaldSelfInteractionEnergy;  // Self Interaction Energy of one Adsorbate Molecule
 
 void InitializeEwald(double precision);
+
 double DotProduct(VECTOR a, VECTOR b);
+
 double ErrorFunction(double x);
+
 double ErrorFunctionComplement(double x);
+
 double EwaldFourierEnergyAdsorbate(VECTOR *PosPtr);
+
 double FourierEnergyDifferenceAdsorbate(int New, int Old, int i);
+
 void SelfInteractionEwaldEnergy(void);
+
 #endif
