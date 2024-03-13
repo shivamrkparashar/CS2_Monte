@@ -1,3 +1,0 @@
-/home/shivam/Desktop/gauge_cell/CS2_Monte/src/cmake-build-debug/CMakeFiles/cs2_monte.dir
-/home/shivam/Desktop/gauge_cell/CS2_Monte/src/cmake-build-debug/CMakeFiles/edit_cache.dir
-/home/shivam/Desktop/gauge_cell/CS2_Monte/src/cmake-build-debug/CMakeFiles/rebuild_cache.dir
